@@ -14,10 +14,13 @@ class App extends Component {
         backgroundPosition: 'center',
         height: '100vh',
         width: '100vw'
-        }}> 
+        }}>
+          <Login/> 
       </div>
+
     );
   }
 }
+
 
 export default App;
