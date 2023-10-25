@@ -15,12 +15,30 @@ class App extends Component {
         height: '100vh',
         width: '100vw'
         }}>
-          <Login/> 
+          <LoginContainer/>
       </div>
 
     );
   }
 }
 
+class LoginContainer extends Component {
+  render() {
+    return (
+      <div className="position-relative" style={{
+        height: '100vh',
+        width: '100vw'
+      }}>
+        <div className="position-absolute top-50 start-50 translate-middle" style={{
+        height: '40%',
+        width: '20%',
+        backgroundColor: 'red'
+      }}     >
+
+        </div>
+      </div>
+    )
+  }
+}
 
 export default App;
