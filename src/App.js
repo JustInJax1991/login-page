@@ -11,8 +11,9 @@ class App extends Component {
         backgroundAttachment: "fixed",
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        width: "100vw",
-        height: "100vh"
+        backgroundPosition: 'center',
+        height: '100vh',
+        width: '100vw'
         }}> 
       </div>
     );
