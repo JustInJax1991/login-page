@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import background from './images/whiteoak.jpg'
+import background from './images/whiteoak.jpg'; 
+import validator from 'validator'
 
 class App extends Component {
   render() {
@@ -70,7 +71,20 @@ class LoginHeader extends Component {
 class LoginSignUpBody extends Component {
   
   onFormSubmit = (evt) => {
+    const userLogin = this.state.fields;
+    const fieldErrors = this.validate(userLogin);
+    this.setState({fieldErrors});
     evt.preventDefault();
+
+    if(Object.keys(fieldErrors).length) return;
+
+    this.setState({
+      fields: {
+        email: '',
+        password: ''
+      }
+    })
+
     console.log(this.state.fields)
   }
 
@@ -80,11 +94,19 @@ class LoginSignUpBody extends Component {
     this.setState({ fields })
   }
 
+  validate = login => {
+    const errors = {};
+    if(!login.email) errors.email = 'Email Required';
+    if(login.email && !validator.isEmail(login.email)) errors.email = 'Invalid Email';
+    return errors;
+  }
+
   state = {
     fields: {
       email: '',
       password: ''
-    }
+    }, 
+    fieldErrors: {}
   }
   render() {
     return (
@@ -93,7 +115,6 @@ class LoginSignUpBody extends Component {
             <div className="my-3 mx-3" style={{color: 'white'}}>
           <label for="email" className="form-label">Email address</label>
           <input 
-           type="email" 
            className="form-control" 
            id="email" 
            placeholder='name@example.com' 
@@ -101,6 +122,7 @@ class LoginSignUpBody extends Component {
            value={this.state.fields.email}
            onChange={this.onInputChange} 
           />
+          <span style={{color: 'red'}}>{this.state.fieldErrors.email}</span>
           </div>
           <div className="my-3 mx-3" style={{color: 'white'}}>
           <label for="password" className="form-label">Password</label>
