@@ -68,24 +68,75 @@ class LoginHeader extends Component {
 }
 
 class LoginSignUpBody extends Component {
+  
+  onFormSubmit = (evt) => {
+    evt.preventDefault();
+    console.log(this.state.fields)
+  }
+
+  onInputChange = (evt) => {
+    const fields = Object.assign({}, this.state.fields);
+    fields[evt.target.name] = evt.target.value;
+    this.setState({ fields })
+  }
+
+  state = {
+    fields: {
+      email: '',
+      password: ''
+    }
+  }
   render() {
     return (
       <div>
-        <div className="my-3 mx-3" style={{color: 'white'}}>
-         <label for="email" className="form-label">Email address</label>
-         <input type="email" className="form-control" id="email" placeholder='name@example.com'></input>
-        </div>
-        <div className="my-3 mx-3" style={{color: 'white'}}>
-         <label for="password" className="form-label">Password</label>
-         <input type="password" className="form-control" id="password" placeholder='password'></input>
-        </div>
-        <div className="my-3 mx-3" style={{color: 'white'}}>
-          Forgot <a href="#" style={{color: '#2f3e46'}}>username</a> or <a href="#" style={{color: '#2f3e46'}}>password </a>?
-        </div>
-        <div className="my-4 d-flex justify-content-evenly" style={{color: 'white'}}>
-          <button type="button" className="btn btn-lg" style={{backgroundColor: '#354f52', color: 'white'}}>Login</button>
-          <button type="button" className="btn btn-lg" style={{backgroundColor: '#354f52', color: 'white'}}>Sign Up</button>
-        </div>
+        <form onSubmit={this.onFormSubmit}>
+            <div className="my-3 mx-3" style={{color: 'white'}}>
+          <label for="email" className="form-label">Email address</label>
+          <input 
+           type="email" 
+           className="form-control" 
+           id="email" 
+           placeholder='name@example.com' 
+           name='email'
+           value={this.state.fields.email}
+           onChange={this.onInputChange} 
+          />
+          </div>
+          <div className="my-3 mx-3" style={{color: 'white'}}>
+          <label for="password" className="form-label">Password</label>
+          <input 
+           type="password" 
+           className="form-control" 
+           id="password" 
+           placeholder='password' 
+           name='password'
+           value={this.state.fields.password}
+           onChange={this.onInputChange}
+           />
+          </div>
+          <div className="my-3 mx-3" style={{color: 'white'}}>
+            Forgot <a href="#" style={{color: '#2f3e46'}}>username</a> or <a href="#" style={{color: '#2f3e46'}}>password </a>?
+          </div>
+          <div className="my-4 d-flex justify-content-evenly" style={{color: 'white'}}>
+            <button type="submit" 
+            className="btn btn-lg" 
+            style={{backgroundColor: '#354f52', color: 'white'}}
+            name="login"
+            value="login"
+            >
+              Login
+            </button>
+            <button type="button" 
+            className="btn btn-lg" 
+            style={{backgroundColor: '#354f52', color: 'white'}}
+            name="signup"
+            value="signup"
+            onClick={this.onButtonClick}
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>  
       </div>
     )
   }
