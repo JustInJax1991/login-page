@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import background from './images/whiteoak.jpg'; 
-import validator from 'validator'
+import validator from 'validator';
+import PropTypes from 'prop-types'
 
 class App extends Component {
   render() {
@@ -72,11 +73,11 @@ class LoginSignUpBody extends Component {
   
   onFormSubmit = (evt) => {
     const userLogin = this.state.fields;
-    const fieldErrors = this.validate(userLogin);
-    this.setState({fieldErrors});
+    
     evt.preventDefault();
 
-    if(Object.keys(fieldErrors).length) return;
+    if(this.validate()) return;
+
 
     this.setState({
       fields: {
@@ -88,17 +89,30 @@ class LoginSignUpBody extends Component {
     console.log(this.state.fields)
   }
 
-  onInputChange = (evt) => {
+  onInputChange = ({name, value, error}) => {
     const fields = Object.assign({}, this.state.fields);
-    fields[evt.target.name] = evt.target.value;
-    this.setState({ fields })
+    const fieldErrors = Object.assign({}, this.state.fieldErrors);
+
+    fields[name] = value;
+    fieldErrors[name] = error;
+
+    this.setState({fields, fieldErrors});
   }
 
-  validate = login => {
-    const errors = {};
-    if(!login.email) errors.email = 'Email Required';
-    if(login.email && !validator.isEmail(login.email)) errors.email = 'Invalid Email';
-    return errors;
+  validate() {
+    const userLogin = this.state.fields;
+    const fieldErrors = this.state.fieldErrors;
+    const errMessages = Object.keys(fieldErrors).filter((k) => fieldErrors[k]);
+    
+    if(!userLogin.email) return true;
+    console.log(userLogin.email);
+    if(!userLogin.password) return true;
+    console.log(userLogin.password);
+    if(errMessages.length) return true;
+    console.log('No errors!');
+
+    return false;
+
   }
 
   state = {
@@ -112,30 +126,21 @@ class LoginSignUpBody extends Component {
     return (
       <div>
         <form onSubmit={this.onFormSubmit}>
-            <div className="my-3 mx-3" style={{color: 'white'}}>
-          <label for="email" className="form-label">Email address</label>
-          <input 
-           className="form-control" 
-           id="email" 
-           placeholder='name@example.com' 
-           name='email'
-           value={this.state.fields.email}
-           onChange={this.onInputChange} 
+          <Field
+          placeholder="somebody@somewhere.com"
+          name="email"
+          value={this.state.fields.email}
+          onChange={this.onInputChange}
+          validate={val => (val ? false : 'Email Required')}
           />
-          <span style={{color: 'red'}}>{this.state.fieldErrors.email}</span>
-          </div>
-          <div className="my-3 mx-3" style={{color: 'white'}}>
-          <label for="password" className="form-label">Password</label>
-          <input 
-           type="password" 
-           className="form-control" 
-           id="password" 
-           placeholder='password' 
-           name='password'
-           value={this.state.fields.password}
-           onChange={this.onInputChange}
-           />
-          </div>
+          <Field
+          placeholder="password"
+          name="password"
+          value={this.state.fields.password}
+          onChange={this.onInputChange}
+          validate={val => (val ? false : 'Password Required')}
+          />
+          
           <div className="my-3 mx-3" style={{color: 'white'}}>
             Forgot <a href="#" style={{color: '#2f3e46'}}>username</a> or <a href="#" style={{color: '#2f3e46'}}>password </a>?
           </div>
@@ -143,8 +148,7 @@ class LoginSignUpBody extends Component {
             <button type="submit" 
             className="btn btn-lg" 
             style={{backgroundColor: '#354f52', color: 'white'}}
-            name="login"
-            value="login"
+            disabled={this.validate()}
             >
               Login
             </button>
@@ -160,6 +164,49 @@ class LoginSignUpBody extends Component {
           </div>
         </form>  
       </div>
+    )
+  }
+}
+
+class Field extends Component {
+  static propTypes = {
+    placeholder: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    validate: PropTypes.func,
+    onChange: PropTypes.func.isRequired
+  }
+
+  state = {
+    value: this.props.value,
+    error: false
+  }
+
+  getDerivedStateFromProps(nextProps) {
+    return {value: nextProps.value}
+  }
+
+  onChange = evt => {
+    const name = this.props.name;
+    const value = evt.target.value;
+    const error = this.props.validate ? this.props.validate(value) : false;
+    this.setState({value, error});
+    this.props.onChange({name, value, error});
+
+  }
+
+  render() {
+    return (
+      <div className="my-3 mx-3" style={{color: 'white'}}>
+          <label className="form-label">{this.props.name}</label>
+          <input 
+           className="form-control" 
+           placeholder={this.props.placeholder}
+           value={this.state.value}
+           onChange={this.onChange} 
+          />
+          <span style={{color: 'red'}}>{this.state.error}</span>
+          </div>
     )
   }
 }
