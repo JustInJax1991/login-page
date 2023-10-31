@@ -10,12 +10,11 @@ class App extends Component {
     return (
       <div style={{ 
         backgroundImage:  `url(${background})`,
-        backgroundAttachment: "fixed",
+        backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        height: '100vh',
-        width: '100vw'
+        overflow: 'hidden'
         }}>
           <div style={{
             height: '100vh',
@@ -39,9 +38,7 @@ class LoginContainer extends Component {
         height: '100vh',
         width: '100vw'
       }}>
-        <div className="position-absolute top-50 start-50 translate-middle" style={{
-        height: '40%',
-        width: '20%',
+        <div className="position-absolute top-50 start-50 translate-middle d-flex-column" style={{
         backgroundColor: '#84a98c'
       }}>
         <LoginHeader/>
